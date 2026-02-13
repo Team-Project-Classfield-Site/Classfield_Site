@@ -1,0 +1,7 @@
+[
+  {"model": "comments.comment", "pk": 1, "fields": {"text": "Nice!", "author": 1, "classfield": 1}},
+  {"model": "comments.comment", "pk": 2, "fields": {"text": "I want this", "author": 2, "classfield": 2}},
+  {"model": "comments.comment", "pk": 3, "fields": {"text": "Looks good", "author": 3, "classfield": 3}},
+  {"model": "comments.comment", "pk": 4, "fields": {"text": "Great deal", "author": 4, "classfield": 4}},
+  {"model": "comments.comment", "pk": 5, "fields": {"text": "Awesome", "author": 5, "classfield": 5}}
+]

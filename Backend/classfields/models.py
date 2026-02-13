@@ -1,8 +1,8 @@
 from django.core.validators import MinValueValidator, MaxValueValidator, MinLengthValidator, MaxLengthValidator
 from django.db import models
 
-from users import UserClassfield
-from categories import Category
+from users.models import UserClassfield
+from categories.models import Category
 
 class Classfield(models.Model):
     title = models.CharField(

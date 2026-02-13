@@ -1,0 +1,12 @@
+[
+  {"model": "classfields.classfield", "pk": 1, "fields": {"title": "iPhone 13", "description": "Good phone", "price": 20000, "date": "2026-01-01T10:00:00Z", "category": 1, "owner": 1}},
+  {"model": "classfields.classfield", "pk": 2, "fields": {"title": "MacBook Pro", "description": "Laptop", "price": 50000, "date": "2026-01-02T10:00:00Z", "category": 1, "owner": 2}},
+  {"model": "classfields.classfield", "pk": 3, "fields": {"title": "Harry Potter", "description": "Book", "price": 300, "date": "2026-01-03T10:00:00Z", "category": 2, "owner": 3}},
+  {"model": "classfields.classfield", "pk": 4, "fields": {"title": "T-Shirt", "description": "Clothes", "price": 200, "date": "2026-01-04T10:00:00Z", "category": 3, "owner": 4}},
+  {"model": "classfields.classfield", "pk": 5, "fields": {"title": "Football", "description": "Sport item", "price": 500, "date": "2026-01-05T10:00:00Z", "category": 4, "owner": 5}},
+  {"model": "classfields.classfield", "pk": 6, "fields": {"title": "Lego Set", "description": "Toy", "price": 1000, "date": "2026-01-06T10:00:00Z", "category": 5, "owner": 6}},
+  {"model": "classfields.classfield", "pk": 7, "fields": {"title": "iPad", "description": "Tablet", "price": 15000, "date": "2026-01-07T10:00:00Z", "category": 1, "owner": 7}},
+  {"model": "classfields.classfield", "pk": 8, "fields": {"title": "Sneakers", "description": "Shoes", "price": 2500, "date": "2026-01-08T10:00:00Z", "category": 3, "owner": 8}},
+  {"model": "classfields.classfield", "pk": 9, "fields": {"title": "Basketball", "description": "Sport", "price": 800, "date": "2026-01-09T10:00:00Z", "category": 4, "owner": 9}},
+  {"model": "classfields.classfield", "pk": 10, "fields": {"title": "Game Console", "description": "Xbox", "price": 12000, "date": "2026-01-10T10:00:00Z", "category": 5, "owner": 10}}
+]

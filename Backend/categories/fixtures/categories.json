@@ -1,0 +1,7 @@
+[
+  {"model": "categories.category", "pk": 1, "fields": {"title": "Electronics"}},
+  {"model": "categories.category", "pk": 2, "fields": {"title": "Books"}},
+  {"model": "categories.category", "pk": 3, "fields": {"title": "Clothes"}},
+  {"model": "categories.category", "pk": 4, "fields": {"title": "Sports"}},
+  {"model": "categories.category", "pk": 5, "fields": {"title": "Toys"}}
+]

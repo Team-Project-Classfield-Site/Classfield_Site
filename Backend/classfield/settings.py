@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'classfields',
     'categories',
     'favorites',
-    'storages',
     'comments',
     'users',
 ]

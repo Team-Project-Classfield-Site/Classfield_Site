@@ -1,8 +1,8 @@
 from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.db import models
 
-from classfields import Classfield
-from users import UserClassfield
+from classfields.models import Classfield
+from users.models import UserClassfield
 
 class Comment(models.Model):
     text = models.CharField(
