@@ -1,8 +1,8 @@
 # Team Project Classifieds Site
 
 
-[![Github Issues](https://img.shields.io/github/issues/zdkazuha/Team-project-Library?style=flat-square)](https://github.com/zdkazuha/Team-project-Library/issues)
-[![Pending Pull-Requests](https://img.shields.io/github/issues-pr/zdkazuha/Team-project-Library?style=flat-square)](https://github.com/zdkazuha/Team-project-Library/pulls)
+[![Github Issues](https://img.shields.io/github/issues/Team-Project-Classfield-Site/Classifieds_Site?style=flat-square)](https://github.com/Team-Project-Classfield-Site/Classifieds_Site/issues)
+[![Pending Pull-Requests](https://img.shields.io/github/issues-pr/Team-Project-Classfield-Site/Classifieds_Site?style=flat-square)](https://github.com/Team-Project-Classfield-Site/Classifieds_Site/pulls)
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Team-Project-Classfield-Site_Classifieds_Site&metric=alert_status)](https://sonarcloud.io/project/overview?id=Team-Project-Classfield-Site_Classifieds_Site)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Team-Project-Classfield-Site_Classifieds_Site&metric=coverage)](https://sonarcloud.io/project/overview?id=Team-Project-Classfield-Site_Classifieds_Site)
