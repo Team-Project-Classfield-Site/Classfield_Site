@@ -8,12 +8,6 @@ class Comment(models.Model):
     text = models.CharField(
         validators=[MinLengthValidator(3), MaxLengthValidator(255)]
     )
-    
-    image = models.ImageField(
-        upload_to="comment_image/",
-        null=True,
-        blank=True,
-    )
 
     author = models.ForeignKey(
         UserClassfield,
