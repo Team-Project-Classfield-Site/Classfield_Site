@@ -21,11 +21,15 @@ from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
 from categories.views import CategoryViewSet
 from classfields.views import ClassfieldViewSet
+from comments.views import CommentViewSet 
+from favorites.views import FavoriteViewSet 
 
 # Створюємо роутер для API
 router = DefaultRouter()
 router.register(r'categories', CategoryViewSet)
 router.register(r'classfields', ClassfieldViewSet)
+router.register(r'comments', CommentViewSet, basename='comment')
+router.register(r'favorites', FavoriteViewSet, basename='favorite')
 
 urlpatterns = [
     path('admin/', admin.site.urls), 
