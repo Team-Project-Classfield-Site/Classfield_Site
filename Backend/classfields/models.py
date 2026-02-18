@@ -12,7 +12,7 @@ class Classfield(models.Model):
         validators=[MinLengthValidator(3), MaxLengthValidator(255)]
     )
     price = models.IntegerField(
-        validators=[MinLengthValidator(1), MaxLengthValidator(1_000_000)]
+        validators=[MinValueValidator(1), MaxValueValidator(1_000_000)]
     )
     date = models.DateTimeField(auto_now_add=True)
     photo = models.ImageField(upload_to='classfields/', null=True, blank=True)
