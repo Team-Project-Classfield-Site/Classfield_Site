@@ -1,6 +1,7 @@
 from django.db import models
-from classfields import Classfield
-from users import UserClassfield
+
+from classfields.models import Classfield
+from users.models import UserClassfield
 
 class Favorite(models.Model):
     user = models.ForeignKey(

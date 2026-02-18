@@ -1,0 +1,12 @@
+[
+  {"model": "users.userclassfield", "pk": 1, "fields": {"user": 1, "phone": "111111111"}},
+  {"model": "users.userclassfield", "pk": 2, "fields": {"user": 2, "phone": "222222222"}},
+  {"model": "users.userclassfield", "pk": 3, "fields": {"user": 3, "phone": "333333333"}},
+  {"model": "users.userclassfield", "pk": 4, "fields": {"user": 4, "phone": "444444444"}},
+  {"model": "users.userclassfield", "pk": 5, "fields": {"user": 5, "phone": "555555555"}},
+  {"model": "users.userclassfield", "pk": 6, "fields": {"user": 6, "phone": "666666666"}},
+  {"model": "users.userclassfield", "pk": 7, "fields": {"user": 7, "phone": "777777777"}},
+  {"model": "users.userclassfield", "pk": 8, "fields": {"user": 8, "phone": "888888888"}},
+  {"model": "users.userclassfield", "pk": 9, "fields": {"user": 9, "phone": "999999999"}},
+  {"model": "users.userclassfield", "pk": 10, "fields": {"user": 10, "phone": "1010101010"}}
+]
