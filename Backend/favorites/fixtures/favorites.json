@@ -1,0 +1,12 @@
+[
+  {"model": "favorites.favorite", "pk": 1, "fields": {"user": 1, "classfield": 2}},
+  {"model": "favorites.favorite", "pk": 2, "fields": {"user": 2, "classfield": 3}},
+  {"model": "favorites.favorite", "pk": 3, "fields": {"user": 3, "classfield": 4}},
+  {"model": "favorites.favorite", "pk": 4, "fields": {"user": 4, "classfield": 5}},
+  {"model": "favorites.favorite", "pk": 5, "fields": {"user": 5, "classfield": 6}},
+  {"model": "favorites.favorite", "pk": 6, "fields": {"user": 6, "classfield": 7}},
+  {"model": "favorites.favorite", "pk": 7, "fields": {"user": 7, "classfield": 8}},
+  {"model": "favorites.favorite", "pk": 8, "fields": {"user": 8, "classfield": 9}},
+  {"model": "favorites.favorite", "pk": 9, "fields": {"user": 9, "classfield": 10}},
+  {"model": "favorites.favorite", "pk": 10, "fields": {"user": 10, "classfield": 1}}
+]
