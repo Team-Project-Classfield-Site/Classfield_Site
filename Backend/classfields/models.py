@@ -1,8 +1,8 @@
 from django.core.validators import MinValueValidator, MaxValueValidator, MinLengthValidator, MaxLengthValidator
 from django.db import models
 
-from users import UserClassfield
-from categories import Category
+from users.models import UserClassfield
+from categories.models import Category
 
 class Classfield(models.Model):
     title = models.CharField(
@@ -14,11 +14,12 @@ class Classfield(models.Model):
     price = models.IntegerField(
         validators=[MinLengthValidator(1), MaxLengthValidator(1_000_000)]
     )
-    date = models.DateTimeField()
+    date = models.DateTimeField(auto_now_add=True)
+    photo = models.ImageField(upload_to='classfields/', null=True, blank=True)
 
     category = models.ForeignKey(
         Category,
-        related_name="classfiels",
+        related_name="classfields",
         null=True,
         blank=True,
         on_delete=models.SET_NULL
