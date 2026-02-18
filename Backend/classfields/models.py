@@ -14,11 +14,12 @@ class Classfield(models.Model):
     price = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(1_000_000)]
     )
-    date = models.DateTimeField()
+    date = models.DateTimeField(auto_now_add=True)
+    photo = models.ImageField(upload_to='classfields/', null=True, blank=True)
 
     category = models.ForeignKey(
         Category,
-        related_name="classfiels",
+        related_name="classfields",
         null=True,
         blank=True,
         on_delete=models.SET_NULL
