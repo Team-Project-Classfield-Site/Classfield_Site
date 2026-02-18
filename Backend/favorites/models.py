@@ -1,5 +1,4 @@
 from django.db import models
-
 from classfields.models import Classfield
 from users.models import UserClassfield
 
