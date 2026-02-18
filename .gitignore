@@ -1,0 +1,63 @@
+# =========================
+# Python / Django
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+*.log
+*.pot
+*.pyc
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# Django stuff:
+*.mo
+*.pot
+*.log
+*.sqlite3
+db.sqlite3
+*.pyc
+media/
+staticfiles/
+*.swp
+.DS_Store
+
+# =========================
+# Node / React / Vite
+# =========================
+node_modules/
+dist/
+build/
+*.local
+*.env
+.env.*
+.vscode/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.cache/
+*.DS_Store
+
+# =========================
+# IDE / OS
+# =========================
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+*.swp
+Thumbs.db
+.DS_Store
+
+# =========================
+# Misc
+# =========================
+*.log
+*.tmp
