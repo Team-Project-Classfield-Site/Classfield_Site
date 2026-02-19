@@ -135,6 +135,23 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 STATIC_LOCATION = "static"
 MEDIA_LOCATION = "media"
 
+
+# CORS Configuration
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'http://localhost:5173',
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',  
+    'PAGE_SIZE': 10,
+}
+
+
+
+
+
+
 # ---- Azure Blob Storage
 
 AZURE_CONTAINER_STATIC = "static"
@@ -171,3 +188,8 @@ STORAGES = {
         },
     },
 }
+
+
+
+
+
