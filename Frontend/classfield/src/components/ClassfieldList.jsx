@@ -15,7 +15,7 @@ const ClassfieldList = () => {
             {data.map(item => (
                 <div key={item.id} style={styles.card}>
                     {item.photo && (
-                        <img src={`http://localhost:8000${item.photo}`} alt={item.title} style={styles.photo} />
+                        <img src={`${item.photo}`} alt={item.title} style={styles.photo} />
                     )}
                     <div>
                         <h3>{item.title}</h3>

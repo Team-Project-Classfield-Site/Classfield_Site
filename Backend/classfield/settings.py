@@ -147,17 +147,12 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
 }
 
-
-
-
-
-
 # ---- Azure Blob Storage
 
 AZURE_CONTAINER_STATIC = "static"
 AZURE_CONTAINER_MEDIA = "media"
 
-AZURE_ACCOUNT_NAME = "djangomedia"
+AZURE_ACCOUNT_NAME = "classfields"
 AZURE_CUSTOM_DOMAIN = f"{AZURE_ACCOUNT_NAME}.blob.core.windows.net"
 STATIC_URL = f"https://{AZURE_CUSTOM_DOMAIN}/{AZURE_CONTAINER_STATIC}/"
 MEDIA_URL = f"https://{AZURE_CUSTOM_DOMAIN}/{AZURE_CONTAINER_MEDIA}/"
@@ -188,8 +183,3 @@ STORAGES = {
         },
     },
 }
-
-
-
-
-
