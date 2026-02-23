@@ -21,7 +21,7 @@ const HomePage = () => {
 
 return (
     <div>
-      <div style={{ background: "linear-gradient(180deg, #5594b1 0%, #ffffff 400px)", padding: "30px 20px", textAlign: "center", marginBottom: "20px", borderRadius: 20, height: "135px",}}>
+      <div style={{ background: "linear-gradient(180deg, #5594b1 0%, #ffffff 400px)", padding: "30px 20px", textAlign: "center", marginBottom: "30px", borderRadius: 20, height: "135px",}}>
         <h1 style={{ color: "#fff", fontSize: "36px", paddingBottom: "15px"}}>Актуальні оголошення</h1>
         <p style={{ color: "#ffffff", paddingBottom: "50px"}}>Всього на сайті: {totalCount} товарів</p>
       </div>
@@ -43,7 +43,7 @@ return (
           ))}
         </div>
 
-        <div style={{ marginTop: "0px", textAlign: "center" }}>
+        <div style={{ textAlign: "center", height: "0px" }}>
           <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
         </div>
       </div>

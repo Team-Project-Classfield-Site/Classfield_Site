@@ -33,7 +33,7 @@ const LayoutSite = () => {
         />
       </Header>
 
-      <Content style={{ padding: '0 24px', minHeight: '100vh' }}>
+      <Content style={{ padding: '0 24px', minHeight: '100%' }}>
         <Breadcrumb style={{ margin: '12px 0' }} />
         <div
           style={{
