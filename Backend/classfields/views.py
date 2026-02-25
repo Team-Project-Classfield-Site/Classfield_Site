@@ -1,10 +1,13 @@
 from rest_framework import viewsets, permissions
+from rest_framework.permissions import AllowAny
 from .models import Classfield
 from .serializers import ClassfieldSerializer
 from .pagination import ClassfieldPagination
 from users.models import UserClassfield
 
 class ClassfieldViewSet(viewsets.ModelViewSet):
+    permission_classes = [AllowAny]
+
     queryset = Classfield.objects.all().order_by('-date')
     serializer_class = ClassfieldSerializer
     pagination_class = ClassfieldPagination
