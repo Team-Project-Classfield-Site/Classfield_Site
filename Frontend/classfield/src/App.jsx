@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import HomePage from './pages/HomePage';
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
-import LogOutPage from "./pages/LogOutPage";
+import LogoutPage from "./pages/LogoutPage";
 import LayoutSite from './components/LayoutSite';
 import './App.css';
 
@@ -15,7 +15,7 @@ function App() {
             <Route index element={<HomePage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="login" element={<LoginPage />} />
-            <Route path="logout" element={<LogOutPage />} />
+            <Route path="logout" element={<LogoutPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
