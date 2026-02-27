@@ -13,7 +13,7 @@ class RegisterView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        serializer = RegisterSerializer(data=request.data)
+        serializer = RegisterSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             user = serializer.save()
             refresh = RefreshToken.for_user(user)
@@ -96,7 +96,6 @@ class LogoutView(APIView):
 
 
 class MeView(APIView):
-    """Повертає профіль поточного авторизованого користувача."""
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -104,5 +103,17 @@ class MeView(APIView):
             profile = UserClassfield.objects.get(user=request.user)
             serializer = UserProfileSerializer(profile)
             return Response(serializer.data)
+        except UserClassfield.DoesNotExist:
+            return Response({"error": "Профіль не знайдено."}, status=status.HTTP_404_NOT_FOUND)
+
+    def patch(self, request):
+        try:
+            profile = UserClassfield.objects.get(user=request.user)
+            serializer = UserProfileSerializer(profile, data=request.data, partial=True)
+            
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except UserClassfield.DoesNotExist:
             return Response({"error": "Профіль не знайдено."}, status=status.HTTP_404_NOT_FOUND)
