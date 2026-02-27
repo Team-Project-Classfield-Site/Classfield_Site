@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Form, Input, Upload, Space, Typography, Card} from "antd";
+import { Button, Form, Input, Upload, Space, Typography, Card } from "antd";
 import {
   CheckCircleOutlined,
   ShopOutlined,
@@ -23,7 +23,7 @@ const Register = () => {
     formData.append("password", values.password);
     formData.append("phone", values.phone);
 
-    if (values.avatar && values.avatar[0]) {
+    if (values.avatar && values.avatar[0] && values.avatar[0].originFileObj) {
       formData.append("avatar", values.avatar[0].originFileObj);
     }
 
@@ -31,10 +31,15 @@ const Register = () => {
       const response = await axios.post(
         `http://localhost:8000/api/register/`,
         formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
       );
 
       localStorage.setItem("access_token", response.data.access);
-      setUsername(values.username)
+      setUsername(values.username);
       navigate("/");
     } catch (error) {
       console.error(error);
@@ -54,7 +59,7 @@ const Register = () => {
           padding: "60px",
           color: "#fff",
           height: "750px",
-          borderRadius: "20px", 
+          borderRadius: "20px",
           boxShadow: "10px 0 30px rgba(0,0,0,0.2)",
         }}
       >
