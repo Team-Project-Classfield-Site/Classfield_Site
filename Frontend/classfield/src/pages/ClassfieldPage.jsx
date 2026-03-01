@@ -19,7 +19,7 @@ import {
   UserOutlined,
   TagOutlined,
   ArrowLeftOutlined,
-  PhoneOutlined,
+  HeartOutlined,
   MessageOutlined,
 } from "@ant-design/icons";
 
@@ -177,19 +177,14 @@ function ClassfieldPage() {
 
             <Row gutter={16}>
               <Col span={12}>
-                <Button
-                  type="primary"
-                  size="large"
-                  block
-                  icon={<PhoneOutlined />}
-                  style={{ backgroundColor: "#001529", borderColor: "#001529" }}
-                >
-                  Show Phone
+                <Button size="large" block icon={<MessageOutlined />}>
+                  Write Message
                 </Button>
               </Col>
               <Col span={12}>
-                <Button size="large" block icon={<MessageOutlined />}>
-                  Write Message
+              {/* Додати первірку чи в улюбленому та інше */}
+                <Button size="large" block icon={<HeartOutlined />}>
+                  Add to favorite
                 </Button>
               </Col>
             </Row>
