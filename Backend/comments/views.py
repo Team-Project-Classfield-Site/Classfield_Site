@@ -3,8 +3,10 @@ from .models import Comment
 from .serializers import CommentSerializer
 from .pagination import CommentPagination
 from users.models import UserClassfield
+from rest_framework.permissions import AllowAny
 
 class CommentViewSet(viewsets.ModelViewSet):
+    permission_classes = [AllowAny]
     serializer_class = CommentSerializer
     pagination_class = CommentPagination
 

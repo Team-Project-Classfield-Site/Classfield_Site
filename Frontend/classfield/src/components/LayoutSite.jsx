@@ -10,12 +10,12 @@ import { UserContext } from "../contexts/user.context";
 
 const { Header, Content, Footer } = Layout;
 const items = [
-    {
-        key: '/',
-        label: <Link to="/">Home</Link>,
-        icon: <HomeFilled />
-    },
-]
+  {
+    key: "/",
+    label: <Link to="/">Home</Link>,
+    icon: <HomeFilled />,
+  },
+];
 
 const itemsLR = [
   {
