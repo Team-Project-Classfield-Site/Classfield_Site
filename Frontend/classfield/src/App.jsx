@@ -3,6 +3,7 @@ import HomePage from './pages/HomePage';
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import LogoutPage from "./pages/LogoutPage";
+import ClassfieldPage from "./pages/ClassfieldPage";
 import LayoutSite from './components/LayoutSite';
 import './App.css';
 
@@ -16,6 +17,7 @@ function App() {
             <Route path="register" element={<RegisterPage />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="logout" element={<LogoutPage />} />
+            <Route path="classfield_page/:id" element={<ClassfieldPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

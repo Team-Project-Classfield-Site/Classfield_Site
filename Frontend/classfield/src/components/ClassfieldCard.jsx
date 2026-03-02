@@ -30,7 +30,7 @@ export default function ClassfieldCard({ classfield, categories }) {
       actions={[
         <div style={{ display: "flex", padding: "0 10px", gap: "10px" }}>
           {/* ToDo: додати перевірку чи огологення є в улюбленому */}
-          <Link href={`/add_favorite/${id}`} style={{ flex: 1 }}>
+          <Link to={`/add_favorite/${id}`} style={{ flex: 1 }}>
             <Button
               block
               style={{
@@ -44,7 +44,7 @@ export default function ClassfieldCard({ classfield, categories }) {
             </Button>
           </Link>
 
-          <Link href={`/classfield_page/${id}`} style={{ flex: 1 }}>
+          <Link to={`/classfield_page/${id}`} style={{ flex: 1 }}>
             <Button
               block
               type="primary"
