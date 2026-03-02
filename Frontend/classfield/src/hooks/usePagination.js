@@ -8,6 +8,7 @@ export const usePagination = (endpoint, params = {}) => {
     const [totalCount, setTotalCount] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [search, setSearch] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -29,5 +30,10 @@ export const usePagination = (endpoint, params = {}) => {
         fetchData();
     }, [endpoint, currentPage]);
 
-    return { data, currentPage, totalPages, totalCount, setCurrentPage, loading, error };
+    const handleSearch = (value) => {
+        setSearch(value);
+        setCurrentPage(1);
+    };
+
+    return { data, currentPage, totalPages, totalCount, setCurrentPage, loading, error, search, handleSearch  };
 };
