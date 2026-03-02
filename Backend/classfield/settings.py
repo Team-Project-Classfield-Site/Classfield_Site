@@ -142,7 +142,6 @@ MEDIA_LOCATION = "media"
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:5173',
-    'http://localhost:5175',
 ]
 
 REST_FRAMEWORK = {

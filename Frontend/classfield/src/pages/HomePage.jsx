@@ -11,8 +11,6 @@ const HomePage = () => {
     setCurrentPage,
     loading,
     error,
-    search,
-    handleSearch,
   } = usePagination("classfields/");
   const { data: categories } = usePagination("categories/");
 
@@ -41,25 +39,6 @@ return (
       </p>
     </div>
 
-     <div style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
-        <input
-          type="text"
-          placeholder="Пошук за назвою..."
-          value={search}
-          onChange={(e) => handleSearch(e.target.value)}
-          style={{
-            width: "100%",
-            maxWidth: "500px",
-            padding: "10px 16px",
-            borderRadius: "10px",
-            border: "1px solid #ccc",
-            fontSize: "16px",
-            outline: "none",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-          }}
-        />
-      </div>
-
     <div
       style={{
         backgroundColor: "#fff",
@@ -76,9 +55,6 @@ return (
           justifyContent: "center",
         }}
       >
-        {classfields?.length === 0 && (
-            <p style={{ color: "#999" }}>Нічого не знайдено</p>
-        )}
         {classfields?.map((item) => (
           <ClassfieldCard
             key={item.id}
