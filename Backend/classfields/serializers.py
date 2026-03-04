@@ -2,7 +2,9 @@ from rest_framework import serializers
 from .models import Classfield
 
 class ClassfieldSerializer(serializers.ModelSerializer):
-    owner_name = serializers.ReadOnlyField(source='owner.user.username')
+    category_title = serializers.SerializerMethodField(read_only=True)
+    owner_name = serializers.SerializerMethodField(read_only=True)
+    owner_avatar = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Classfield
@@ -17,6 +19,8 @@ class ClassfieldSerializer(serializers.ModelSerializer):
             'category_title',
             'owner',
             'owner_name',
+            'owner_avatar',
+        ]
 
         ]
         read_only_fields = ['owner', 'created_at']
@@ -29,3 +33,11 @@ class ClassfieldSerializer(serializers.ModelSerializer):
             if not value.name.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
                 raise serializers.ValidationError("Дозволені формати: JPG, JPEG, PNG, WEBP")
         return value
+    def get_owner_name(self, obj):
+        """Return the owner's username."""
+        return obj.owner.user.username if obj.owner else None
+    
+    def get_owner_avatar(self, obj):
+            if obj.owner and obj.owner.avatar:
+                return obj.owner.avatar.url
+            return None

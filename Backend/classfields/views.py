@@ -1,9 +1,5 @@
-from rest_framework import viewsets, filters
-from django_filters.rest_framework import DjangoFilterBackend
-import django_filters
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
+from rest_framework import viewsets, permissions
+from rest_framework.permissions import AllowAny
 from .models import Classfield
 from .serializers import ClassfieldSerializer
 from .permissions import IsOwnerOrReadOnly
@@ -19,7 +15,9 @@ class ClassfieldFilter(django_filters.FilterSet):
         fields = ['category', 'min_price', 'max_price']
 
 class ClassfieldViewSet(viewsets.ModelViewSet):
-    queryset = Classfield.objects.all()
+    permission_classes = [AllowAny]
+
+    queryset = Classfield.objects.all().order_by('-date')
     serializer_class = ClassfieldSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     

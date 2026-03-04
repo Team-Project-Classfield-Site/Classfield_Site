@@ -1,7 +1,7 @@
 [
-  {"model": "users.userclassfield", "pk": 1, "fields": {"user": 1, "phone": "111111111", "avatar": "classfields/user-avatar_1.jpg"}},
-  {"model": "users.userclassfield", "pk": 2, "fields": {"user": 2, "phone": "222222222", "avatar": "classfields/user-avatar_2.jpg"}},
-  {"model": "users.userclassfield", "pk": 3, "fields": {"user": 3, "phone": "333333333", "avatar": "classfields/user-avatar_3.jpg"}},
-  {"model": "users.userclassfield", "pk": 4, "fields": {"user": 4, "phone": "444444444"}, "avatar": "classfields/user-avatar_4.jpg"},
-  {"model": "users.userclassfield", "pk": 5, "fields": {"user": 5, "phone": "555555555"}, "avatar": "classfields/user-avatar_5.jpg"}
+  {"model": "users.userclassfield", "pk": 1, "fields": {"user": 1, "phone": "111111111", "avatar": "user-avatars/user-avatar_1.jpg"}},
+  {"model": "users.userclassfield", "pk": 2, "fields": {"user": 2, "phone": "222222222", "avatar": "user-avatars/user-avatar_2.jpg"}},
+  {"model": "users.userclassfield", "pk": 3, "fields": {"user": 3, "phone": "333333333", "avatar": "user-avatars/user-avatar_3.jpg"}},
+  {"model": "users.userclassfield", "pk": 4, "fields": {"user": 4, "phone": "444444444", "avatar": "user-avatars/user-avatar_4.jpg"}},
+  {"model": "users.userclassfield", "pk": 5, "fields": {"user": 5, "phone": "555555555", "avatar": "user-avatars/user-avatar_5.jpg"}}
 ]

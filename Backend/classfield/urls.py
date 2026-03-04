@@ -34,6 +34,7 @@ router.register(r'favorites', FavoriteViewSet, basename='favorite')
 urlpatterns = [
     path('admin/', admin.site.urls), 
     path('api/', include(router.urls)), 
+    path('api/', include('users.urls')),
 ]
 
 if settings.DEBUG:
