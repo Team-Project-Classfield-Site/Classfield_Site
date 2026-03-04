@@ -1,14 +1,12 @@
 from rest_framework import serializers
 from .models import Classfield
 
-
 class ClassfieldSerializer(serializers.ModelSerializer):
-    category_title = serializers.SerializerMethodField(read_only=True)
-    owner_name = serializers.SerializerMethodField(read_only=True)
+    owner_name = serializers.ReadOnlyField(source='owner.user.username')
 
     class Meta:
         model = Classfield
-        fields = [
+        ields = [
             'id',
             'title',
             'description',
@@ -19,12 +17,15 @@ class ClassfieldSerializer(serializers.ModelSerializer):
             'category_title',
             'owner',
             'owner_name',
+
         ]
+        read_only_fields = ['owner', 'created_at']
 
-    def get_category_title(self, obj):
-        """Return the category title if it exists."""
-        return obj.category.title if obj.category else None
-
-    def get_owner_name(self, obj):
-        """Return the owner's username."""
-        return obj.owner.user.username if obj.owner else None
+    def validate_image(self, value):
+        if value:
+            limit_mb = 10 
+            if value.size > limit_mb * 1024 * 1024:
+                raise serializers.ValidationError(f"Максимальний розмір фото {limit_mb} МБ")
+            if not value.name.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
+                raise serializers.ValidationError("Дозволені формати: JPG, JPEG, PNG, WEBP")
+        return value
