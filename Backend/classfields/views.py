@@ -3,7 +3,9 @@ from .models import Classfield
 from .serializers import ClassfieldSerializer
 from .pagination import ClassfieldPagination
 from rest_framework.exceptions import ValidationError
+from .permissions import IsOwnerOrReadOnly 
 from users.models import UserClassfield
+from rest_framework import viewsets, permissions, filters
 
 class ClassfieldViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
