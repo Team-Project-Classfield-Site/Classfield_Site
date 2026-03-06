@@ -40,7 +40,7 @@ export default function ClassfieldCard({
     const token = localStorage.getItem("access_token");
 
     try {
-      if (favorite && favorite.id) {
+      if (favorite) {
         await axios.delete(
           `http://127.0.0.1:8000/api/favorites/${favorite.id}/`,
           { headers: { Authorization: `Bearer ${token}` } },
