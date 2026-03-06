@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import {
@@ -13,6 +13,7 @@ import {
   Empty,
   Avatar,
   Space,
+  message,
 } from "antd";
 import {
   CalendarOutlined,
@@ -23,47 +24,98 @@ import {
   MessageOutlined,
 } from "@ant-design/icons";
 
+import { UserContext } from "../contexts/user.context";
+
 const { Title, Text, Paragraph } = Typography;
 
 function ClassfieldPage() {
   const { id } = useParams();
+  const { getUserFavorite, username } = useContext(UserContext);
+
   const [classfield, setClassfield] = useState(null);
-  const [comments, setComments] = useState(null);
+  const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [favorite, setFavorite] = useState(null);
+  const [btnLoading, setBtnLoading] = useState(false);
 
   useEffect(() => {
-    const getClassfield = async () => {
+    const fetchData = async () => {
+      setLoading(true);
       try {
-        const response = await axios.get(
-          `http://127.0.0.1:8000/api/classfields/${id}/`,
-        );
-        setClassfield(response.data);
+        const [resContent, resComments] = await Promise.all([
+          axios.get(`http://127.0.0.1:8000/api/classfields/${id}/`),
+          axios.get(`http://127.0.0.1:8000/api/comments/?classfield=${id}`),
+        ]);
+
+        setClassfield(resContent.data);
+        const commentsData =
+          resComments.data.results ||
+          (Array.isArray(resComments.data) ? resComments.data : []);
+        setComments(commentsData);
       } catch (error) {
         console.error("Fetch error:", error);
+        message.error("Failed to load data");
       } finally {
         setLoading(false);
       }
     };
 
-    const getComments = async () => {
-      try {
-        const response = await axios.get(
-          `http://127.0.0.1:8000/api/comments/?classfield=${id}`,
-        );
-        const data =
-          response.data.results ||
-          (Array.isArray(response.data) ? response.data : []);
-        setComments(data);
-      } catch (error) {
-        console.error("Fetch error:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getClassfield();
-    getComments();
+    fetchData();
   }, [id]);
+
+  useEffect(() => {
+    const checkStatus = async () => {
+      if (username) {
+        try {
+          const data = await getUserFavorite(id);
+          if (data?.results?.length > 0) {
+            setFavorite(data.results[0]);
+          } else {
+            setFavorite(null);
+          }
+        } catch (e) {
+          console.error("Favorite status error", e);
+        }
+      }
+    };
+    checkStatus();
+  }, [id, username, getUserFavorite]);
+
+  const addToFavorite = async () => {
+    if (!username) {
+      message.warning("Please log in to add favorites");
+      return;
+    }
+
+    setBtnLoading(true);
+    const token = localStorage.getItem("access_token");
+
+    try {
+      if (favorite) {
+        await axios.delete(
+          `http://127.0.0.1:8000/api/favorites/${favorite.id}/`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+        setFavorite(null);
+        message.success("Removed from favorites");
+      } else {
+        const response = await axios.post(
+          `http://127.0.0.1:8000/api/favorites/`,
+          { classfield: id },
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+        setFavorite(response.data);
+        message.success("Added to favorites");
+      }
+    } catch (error) {
+      console.error(error.response?.data);
+      message.error("Action failed");
+    } finally {
+      setBtnLoading(false);
+    }
+  };
+
+  const isFavorite = favorite !== null;
 
   if (loading)
     return (
@@ -135,20 +187,17 @@ function ClassfieldPage() {
             </div>
 
             <Title level={2}>{classfield.title}</Title>
-
             <Title level={3} style={{ color: "#1890ff", marginTop: 0 }}>
               {classfield.price?.toLocaleString()} ₴
             </Title>
 
             <Divider />
-
             <Title level={4}>Description</Title>
             <Paragraph style={{ fontSize: "16px", color: "#595959" }}>
               {classfield.description}
             </Paragraph>
 
             <Divider />
-
             <div
               style={{
                 padding: "15px",
@@ -182,9 +231,20 @@ function ClassfieldPage() {
                 </Button>
               </Col>
               <Col span={12}>
-              {/* Додати первірку чи в улюбленому та інше */}
-                <Button size="large" block icon={<HeartOutlined />}>
-                  Add to favorite
+                <Button
+                  size="large"
+                  block
+                  icon={<HeartOutlined />}
+                  loading={btnLoading}
+                  onClick={addToFavorite}
+                  style={{
+                    backgroundColor: isFavorite ? "#ff4d4f" : "#ffffff",
+                    color: isFavorite ? "#ffffff" : "#003a8c",
+                    borderColor: isFavorite ? "#ff4d4f" : "#91d5ff",
+                    fontWeight: "500",
+                  }}
+                >
+                  {isFavorite ? "In Favorites" : "Add to favorite"}
                 </Button>
               </Col>
             </Row>
@@ -193,7 +253,7 @@ function ClassfieldPage() {
       </Row>
 
       <Card title="Comments" style={{ marginTop: 24, borderRadius: "12px" }}>
-        {!comments || comments.length === 0 ? (
+        {comments.length === 0 ? (
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
             description="No comments yet"

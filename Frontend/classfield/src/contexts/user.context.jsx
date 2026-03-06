@@ -1,31 +1,79 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect } from "react";
+import axios from "axios";
 
-export const UserContext = createContext({ 
-    username: null,
-    setUsername: () => {},
-    isAuth: () => null,
-    clear: () => {},
+export const UserContext = createContext({
+  username: null,
+  setUsername: () => {},
+  isAuth: () => null,
+  clear: () => {},
+  getUserFavorites: () => {},
+  getUserFavorite: () => {},
 });
 
 export const UserProvider = ({ children }) => {
-    const [username, setUsername] = useState(() => {
-        return localStorage.getItem('username') || null;
-    });
+  const [username, setUsername] = useState(
+    () => localStorage.getItem("username") || null,
+  );
 
-    useEffect(() => {
-        if (username) {
-            localStorage.setItem('username', username);;
-        } else {
-            localStorage.removeItem('username');
-        }
-    }, [username]);
+  useEffect(() => {
+    if (username) {
+      localStorage.setItem("username", username);
+    } else {
+      localStorage.removeItem("username");
+    }
+  }, [username]);
 
-    const clear = () => { setUsername(null); localStorage.removeItem('access_token'); };
-    const isAuth = () => username !== null;
+  const clear = () => {
+    setUsername(null);
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("username");
+  };
 
-    return (
-        <UserContext.Provider value={{username, setUsername, clear, isAuth}}>
-            {children}
-        </UserContext.Provider>
-    );
-}
+  const isAuth = () => username !== null;
+
+  const getUserFavorites = async () => {
+    const token = localStorage.getItem("access_token");
+    if (!token) return { results: [] };
+
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/api/favorites/`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error loading favorites:", error);
+      return { results: [] };
+    }
+  };
+
+  const getUserFavorite = async (classfieldId) => {
+    const token = localStorage.getItem("access_token");
+    if (!token) return { results: [] };
+
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/api/favorites/`, {
+        params: { classfield: classfieldId },
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error loading single favorite:", error);
+      return { results: [] };
+    }
+  };
+
+  return (
+    <UserContext.Provider
+      value={{
+        username,
+        setUsername,
+        clear,
+        isAuth,
+        getUserFavorites,
+        getUserFavorite,
+      }}
+    >
+      {children}
+    </UserContext.Provider>
+  );
+};
