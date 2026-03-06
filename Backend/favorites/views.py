@@ -1,23 +1,34 @@
-from rest_framework import viewsets
 from .models import Favorite
 from .serializers import FavoriteSerializer
 from .pagination import FavoritePagination
-from users.models import UserClassfield
+from rest_framework import viewsets, permissions
+from rest_framework.exceptions import ValidationError
+from users.models import UserClassfield 
 
 class FavoriteViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = FavoriteSerializer
     pagination_class = FavoritePagination
 
     def get_queryset(self):
-        # Фільтр: /api/favorites/?user=3
-        user_id = self.request.query_params.get('user')
-        if user_id:
-            return Favorite.objects.filter(user=user_id).order_by('-id')
-        return Favorite.objects.all().order_by('-id')
+        try:
+            user_profile = self.request.user.userclassfield
+            queryset = Favorite.objects.filter(user=user_profile)
+        except UserClassfield.DoesNotExist:
+            return Favorite.objects.none()
+
+        classfield_id = self.request.query_params.get('classfield')
+        if classfield_id:
+            queryset = queryset.filter(classfield_id=classfield_id)
+
+        return queryset.order_by('-id')
 
     def perform_create(self, serializer):
-        try:
-            user = UserClassfield.objects.first()
-            serializer.save(user=user)
-        except:
-            serializer.save()
+        classfield = serializer.validated_data.get('classfield')
+        
+        user_profile, created = UserClassfield.objects.get_or_create(user=self.request.user)
+        
+        if Favorite.objects.filter(user=user_profile, classfield=classfield).exists():
+            raise ValidationError({"detail": "Це оголошення вже в обраному."})
+
+        serializer.save(user=user_profile)

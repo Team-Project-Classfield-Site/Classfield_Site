@@ -1,11 +1,73 @@
-import React from "react";
-import { Card, Button } from "antd";
-import { Link } from 'react-router-dom';
+import { useState, useEffect, useContext } from "react";
+import { Card, Button, message } from "antd";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { UserContext } from "../contexts/user.context";
 
 const { Meta } = Card;
 
-export default function ClassfieldCard({ classfield, categories }) {
+export default function ClassfieldCard({
+  classfield,
+  categories,
+  favorite_id,
+}) {
   const { id, photo, title, description, category, date } = classfield;
+  const { getUserFavorite, username } = useContext(UserContext);
+
+  const [favorite, setFavorite] = useState(
+    favorite_id ? { id: favorite_id } : null,
+  );
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const checkStatus = async () => {
+      if (username && !favorite_id) {
+        const data = await getUserFavorite(id);
+        if (data && data.results && data.results.length > 0) {
+          setFavorite(data.results[0]);
+        } else {
+          setFavorite(null);
+        }
+      }
+    };
+    checkStatus();
+  }, [id, username, favorite_id]);
+
+  const addToFavorite = async () => {
+    if (!username) {
+      message.warning("Please log in to add favorites");
+      return;
+    }
+
+    setLoading(true);
+    const token = localStorage.getItem("access_token");
+
+    try {
+      if (favorite && favorite.id) {
+        await axios.delete(
+          `http://127.0.0.1:8000/api/favorites/${favorite.id}/`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+        setFavorite(null);
+        message.success("Removed from favorites");
+      } else {
+        const response = await axios.post(
+          `http://127.0.0.1:8000/api/favorites/`,
+          { classfield: id },
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+        setFavorite(response.data);
+        message.success("Added to favorites");
+      }
+    } catch (error) {
+      console.error(error.response?.data);
+      message.error("Action failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const isFavorite = favorite !== null;
 
   return (
     <Card
@@ -29,20 +91,20 @@ export default function ClassfieldCard({ classfield, categories }) {
       }
       actions={[
         <div style={{ display: "flex", padding: "0 10px", gap: "10px" }}>
-          {/* ToDo: додати перевірку чи огологення є в улюбленому */}
-          <Link to={`/add_favorite/${id}`} style={{ flex: 1 }}>
-            <Button
-              block
-              style={{
-                backgroundColor: "#ffffff",
-                color: "#003a8c",
-                borderColor: "#91d5ff",
-                fontWeight: "500",
-              }}
-            >
-              Add to favorite
-            </Button>
-          </Link>
+          <Button
+            block
+            loading={loading}
+            onClick={addToFavorite}
+            style={{
+              backgroundColor: isFavorite ? "#ff4d4f" : "#ffffff",
+              color: isFavorite ? "#ffffff" : "#003a8c",
+              borderColor: isFavorite ? "#ff4d4f" : "#91d5ff",
+              fontWeight: "500",
+              width: "150px",
+            }}
+          >
+            {isFavorite ? "In Favorites" : "Add to favorite"}
+          </Button>
 
           <Link to={`/classfield_page/${id}`} style={{ flex: 1 }}>
             <Button
@@ -52,6 +114,7 @@ export default function ClassfieldCard({ classfield, categories }) {
                 backgroundColor: "#0050b3",
                 borderColor: "#0050b3",
                 fontWeight: "500",
+                width: "150px",
               }}
             >
               Details
@@ -87,14 +150,11 @@ export default function ClassfieldCard({ classfield, categories }) {
                   borderRadius: "12px",
                   fontSize: "12px",
                   textTransform: "uppercase",
-                  letterSpacing: "0.5px",
                 }}
               >
-                {categories.find((c) => c.id === category)?.title ||
-                  "General"}
+                {categories.find((c) => c.id === category)?.title || "General"}
               </span>
             </div>
-
             <p
               style={{
                 color: "#595959",
@@ -104,12 +164,10 @@ export default function ClassfieldCard({ classfield, categories }) {
                 WebkitBoxOrient: "vertical",
                 overflow: "hidden",
                 minHeight: "40px",
-                margin: "0px 0",
               }}
             >
               {description}
             </p>
-
             <div
               style={{
                 borderTop: "1px solid #f0f0f0",
