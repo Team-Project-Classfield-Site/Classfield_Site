@@ -10,6 +10,9 @@ from rest_framework import viewsets, permissions, filters
 class ClassfieldViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title']
+
     queryset = Classfield.objects.all().order_by('-date')
     serializer_class = ClassfieldSerializer
     pagination_class = ClassfieldPagination
