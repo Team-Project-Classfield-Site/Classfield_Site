@@ -1,5 +1,4 @@
 from rest_framework import viewsets, permissions
-from rest_framework.permissions import AllowAny
 from .models import Classfield
 from .serializers import ClassfieldSerializer
 from .permissions import IsOwnerOrReadOnly
@@ -13,9 +12,17 @@ class ClassfieldFilter(django_filters.FilterSet):
     class Meta:
         model = Classfield
         fields = ['category', 'min_price', 'max_price']
+from .pagination import ClassfieldPagination
+from rest_framework.exceptions import ValidationError
+from .permissions import IsOwnerOrReadOnly 
+from users.models import UserClassfield
+from rest_framework import viewsets, permissions, filters
 
 class ClassfieldViewSet(viewsets.ModelViewSet):
-    permission_classes = [AllowAny]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title']
 
     queryset = Classfield.objects.all().order_by('-date')
     serializer_class = ClassfieldSerializer
@@ -42,3 +49,9 @@ class ClassfieldViewSet(viewsets.ModelViewSet):
             
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
+    pagination_class = ClassfieldPagination
+
+    def perform_create(self, serializer):
+        user_profile, _created = UserClassfield.objects.get_or_create(user=self.request.user)
+
+        serializer.save(owner=user_profile)
