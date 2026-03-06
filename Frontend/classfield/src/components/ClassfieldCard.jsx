@@ -8,9 +8,9 @@ const { Meta } = Card;
 
 export default function ClassfieldCard({
   classfield,
-  category,
+  categories,
 }) {
-  const { id, photo, title, description, date } = classfield;
+  const { id, photo, title, description, category, date } = classfield;
   const { getUserFavorite, username } = useContext(UserContext);
 
   const [favorite, setFavorite] = useState(null);
@@ -149,7 +149,7 @@ export default function ClassfieldCard({
                   textTransform: "uppercase",
                 }}
               >
-                {category}
+                {categories?.find((c) => c.id === category)?.title || "General"}
               </span>
             </div>
             <p
