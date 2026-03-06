@@ -5,6 +5,9 @@ import { UserContext } from "../contexts/user.context";
 import { useState, useEffect, useContext } from "react";
 
 const HomePage = () => {
+  const [search, setSearch] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+
   const {
     data: classfields,
     currentPage,
@@ -13,24 +16,28 @@ const HomePage = () => {
     setCurrentPage,
     loading,
     error,
-  } = usePagination("classfields/");
-
+  } = usePagination("classfields/", searchQuery ? { search: searchQuery } : {});
   const { data: categories } = usePagination("categories/");
   const { getUserFavorites, username } = useContext(UserContext);
   const [favorites, setFavorites] = useState([]);
 
-  useEffect(() => {
-    const fetchItems = async () => {
-      const data = await getUserFavorites();
-      setFavorites(data.results || []);
-    };
+  const handleSearch = () => {
+    setSearchQuery(search);
+    setCurrentPage(1);
+  };
 
-    if (username) {
-      fetchItems();
-    } else {
-      setFavorites([]);
-    }
-  }, [username, getUserFavorites]);
+useEffect(() => {
+  const fetchItems = async () => {
+    const data = await getUserFavorites();
+    setFavorites(data.results || []);
+  };
+
+  if (username) {
+    fetchItems();
+  } else {
+    setFavorites([]);
+  }
+}, [username, getUserFavorites]);
 
   if (loading)
     return <div style={{ textAlign: "center" }}>Завантаження...</div>;
@@ -53,8 +60,48 @@ const HomePage = () => {
           Актуальні оголошення
         </h1>
         <p style={{ color: "#ffffff", paddingBottom: "50px" }}>
-          Всього на сайті: {totalCount} товарів
+          {searchQuery == ""
+            ? `Всього на сайті: ${totalCount} товарів`
+            : `За вашим запитом на сайті знайдено: ${totalCount} товарів`}
         </p>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginBottom: "20px",
+          gap: "10px",
+        }}
+      >
+        <input
+          type="text"
+          placeholder="Пошук по назві..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+          style={{
+            padding: "10px 16px",
+            borderRadius: "10px",
+            border: "1px solid #ccc",
+            width: "300px",
+            fontSize: "16px",
+          }}
+        />
+        <button
+          onClick={handleSearch}
+          style={{
+            padding: "10px 20px",
+            borderRadius: "10px",
+            background: "#03498b",
+            color: "#fff",
+            border: "none",
+            cursor: "pointer",
+            fontSize: "16px",
+          }}
+        >
+          Знайти
+        </button>
       </div>
 
       <div
@@ -63,33 +110,41 @@ const HomePage = () => {
           padding: "50px 0px",
           borderRadius: "20px",
           boxShadow: "0 -10px 20px rgba(0,0,0,0.05)",
+          minHeight: "400px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: classfields?.length === 0 ? "center" : "flex-start",
+          alignItems: classfields?.length === 0 ? "center" : "stretch",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "40px",
-            justifyContent: "center",
-          }}
-        >
-          {classfields?.map((item) => {
-            const favoriteEntry = favorites.find(
-              (fav) => Number(fav.classfield) === Number(item.id),
-            );
+        {classfields?.length === 0 ? (
+          <p style={{ color: "#aaa", fontSize: "18px" }}>
+            Оголошень не знайдено
+          </p>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "29px",
+              justifyContent:
+                classfields?.length === 1 ? "center" : "flex-start",
+              padding: "0 40px",
+            }}
+          >
+            {classfields?.map((item) => {
+              return (
+                <ClassfieldCard
+                  key={item.id}
+                  classfield={item}
+                  categories={categories}
+                />
+              );
+            })}
+          </div>
+        )}
 
-            return (
-              <ClassfieldCard
-                key={item.id}
-                favorite_id={favoriteEntry ? favoriteEntry.id : null}
-                classfield={item}
-                categories={categories}
-              />
-            );
-          })}
-        </div>
-
-        <div style={{ textAlign: "center", marginTop: "40px" }}>
+        <div style={{ textAlign: "center", height: "0px" }}>
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
