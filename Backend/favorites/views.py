@@ -26,7 +26,7 @@ class FavoriteViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         classfield = serializer.validated_data.get('classfield')
         
-        user_profile, created = UserClassfield.objects.get_or_create(user=self.request.user)
+        user_profile, created_ = UserClassfield.objects.get_or_create(user=self.request.user)
         
         if Favorite.objects.filter(user=user_profile, classfield=classfield).exists():
             raise ValidationError({"detail": "Це оголошення вже в обраному."})

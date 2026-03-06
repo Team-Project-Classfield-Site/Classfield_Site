@@ -83,7 +83,9 @@ const HomePage = () => {
                 key={item.id}
                 favorite_id={favoriteEntry ? favoriteEntry.id : null}
                 classfield={item}
-                categories={categories}
+                category={
+                  categories.find((c) => c.id === category)?.title || "General"
+                }
               />
             );
           })}

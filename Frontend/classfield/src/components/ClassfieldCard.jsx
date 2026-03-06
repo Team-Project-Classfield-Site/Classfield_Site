@@ -8,22 +8,19 @@ const { Meta } = Card;
 
 export default function ClassfieldCard({
   classfield,
-  categories,
-  favorite_id,
+  category,
 }) {
-  const { id, photo, title, description, category, date } = classfield;
+  const { id, photo, title, description, date } = classfield;
   const { getUserFavorite, username } = useContext(UserContext);
 
-  const [favorite, setFavorite] = useState(
-    favorite_id ? { id: favorite_id } : null,
-  );
+  const [favorite, setFavorite] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const checkStatus = async () => {
-      if (username && !favorite_id) {
+      if (username) {
         const data = await getUserFavorite(id);
-        if (data && data.results && data.results.length > 0) {
+        if (data?.results?.length > 0) {
           setFavorite(data.results[0]);
         } else {
           setFavorite(null);
@@ -31,7 +28,7 @@ export default function ClassfieldCard({
       }
     };
     checkStatus();
-  }, [id, username, favorite_id]);
+  }, [id, username]);
 
   const addToFavorite = async () => {
     if (!username) {
@@ -152,7 +149,7 @@ export default function ClassfieldCard({
                   textTransform: "uppercase",
                 }}
               >
-                {categories.find((c) => c.id === category)?.title || "General"}
+                {category}
               </span>
             </div>
             <p

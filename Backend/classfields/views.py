@@ -13,6 +13,6 @@ class ClassfieldViewSet(viewsets.ModelViewSet):
     pagination_class = ClassfieldPagination
 
     def perform_create(self, serializer):
-        user_profile, created = UserClassfield.objects.get_or_create(user=self.request.user)
+        user_profile, created_ = UserClassfield.objects.get_or_create(user=self.request.user)
 
         serializer.save(owner=user_profile)

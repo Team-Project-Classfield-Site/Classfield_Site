@@ -68,7 +68,7 @@ function ClassfieldPage() {
       if (username) {
         try {
           const data = await getUserFavorite(id);
-          if (data && data.results && data.results.length > 0) {
+          if (data?.results?.length > 0) {
             setFavorite(data.results[0]);
           } else {
             setFavorite(null);
