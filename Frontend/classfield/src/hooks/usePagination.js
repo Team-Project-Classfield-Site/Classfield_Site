@@ -27,7 +27,7 @@ export const usePagination = (endpoint, params = {}) => {
             }
         };
         fetchData();
-    }, [endpoint, currentPage]);
+    }, [endpoint, currentPage, JSON.stringify(params)]);
 
     return { data, currentPage, totalPages, totalCount, setCurrentPage, loading, error };
 };

@@ -5,6 +5,7 @@ from .serializers import ClassfieldSerializer
 from .pagination import ClassfieldPagination
 from .permissions import IsOwnerOrReadOnly 
 from users.models import UserClassfield
+from rest_framework import viewsets, permissions, filters
 
 class ClassfieldViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
@@ -14,6 +15,9 @@ class ClassfieldViewSet(viewsets.ModelViewSet):
     pagination_class = ClassfieldPagination
     
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title']
 
     def perform_create(self, serializer):
         user_profile = UserClassfield.objects.get(user=self.request.user)
