@@ -11,7 +11,7 @@ import axios from "axios";
 import { UserContext } from "../contexts/user.context";
 import { useContext } from "react";
 
-<Form.Item
+{/* <Form.Item
   label="Email"
   name="email"
   rules={[
@@ -20,7 +20,7 @@ import { useContext } from "react";
   ]}
 >
   <Input size="large" placeholder="Enter your email" />
-</Form.Item>
+</Form.Item> */}
 
 
 const { Title, Text } = Typography;
