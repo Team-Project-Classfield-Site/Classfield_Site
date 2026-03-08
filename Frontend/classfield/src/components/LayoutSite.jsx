@@ -44,7 +44,12 @@ const LayoutSite = () => {
     {
       key: "/",
       label: (
-        <a onClick={() => navigate("/", { replace: true })}>Home</a>
+        <Link
+          to="/"
+          onClick={(e) => { e.preventDefault(); navigate("/", { replace: true }); }}
+        >
+          Home
+        </Link>
       ),
       icon: <HomeFilled />,
     },
