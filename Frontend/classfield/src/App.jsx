@@ -4,6 +4,7 @@ import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import LogoutPage from "./pages/LogoutPage";
 import ClassfieldPage from "./pages/ClassfieldPage";
+import FavoritesPage from "./pages/Favoritespage";
 import LayoutSite from './components/LayoutSite';
 import './App.css';
 
@@ -18,6 +19,7 @@ function App() {
             <Route path="login" element={<LoginPage />} />
             <Route path="logout" element={<LogoutPage />} />
             <Route path="classfield_page/:id" element={<ClassfieldPage />} />
+            <Route path="favorites" element={<FavoritesPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

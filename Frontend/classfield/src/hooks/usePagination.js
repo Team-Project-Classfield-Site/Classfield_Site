@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import api from '../api/axios';
 
-export const usePagination = (endpoint, params = {}) => {
+export const usePagination = (endpoint, params = {}, initialPage = 1) => {
     const [data, setData] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(initialPage);
     const [totalPages, setTotalPages] = useState(1);
     const [totalCount, setTotalCount] = useState(0);
     const [loading, setLoading] = useState(false);

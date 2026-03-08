@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   Typography,
@@ -30,6 +30,7 @@ const { Title, Text, Paragraph } = Typography;
 
 function ClassfieldPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { getUserFavorite, username } = useContext(UserContext);
 
   const [classfield, setClassfield] = useState(null);
@@ -138,11 +139,13 @@ function ClassfieldPage() {
         borderRadius: 10,
       }}
     >
-      <Link to="/">
-        <Button icon={<ArrowLeftOutlined />} style={{ marginBottom: 20 }}>
-          Back
-        </Button>
-      </Link>
+      <Button
+        icon={<ArrowLeftOutlined />}
+        style={{ marginBottom: 20 }}
+        onClick={() => navigate(-1)}
+      >
+        Back
+      </Button>
 
       <Row gutter={[24, 24]}>
         <Col xs={24} md={12}>

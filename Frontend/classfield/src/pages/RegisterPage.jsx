@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Form, Input, Upload, Space, Typography, Card } from "antd";
+import { Button, Form, Input, Upload, Space, Typography, Card, message, notification } from "antd";
 import {
   CheckCircleOutlined,
   ShopOutlined,
@@ -10,15 +10,30 @@ import {
 import axios from "axios";
 import { UserContext } from "../contexts/user.context";
 import { useContext } from "react";
+
+<Form.Item
+  label="Email"
+  name="email"
+  rules={[
+    { required: true, message: "Please input your email!" },
+    { type: "email", message: "Please enter a valid email!" },
+  ]}
+>
+  <Input size="large" placeholder="Enter your email" />
+</Form.Item>
+
+
 const { Title, Text } = Typography;
 
 const Register = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const { setUsername } = useContext(UserContext);
+  message.config({ maxCount: 4 });
 
   const onFinish = async (values) => {
     const formData = new FormData();
+    formData.append("email", values.email);
     formData.append("username", values.username);
     formData.append("password", values.password);
     formData.append("phone", values.phone);
@@ -43,8 +58,24 @@ const Register = () => {
       setUsername(values.username);
       navigate("/");
     } catch (error) {
-      console.error(error);
-    }
+      const errors = error.response?.data;
+
+      if (errors?.username) {
+        message.error(`Username: ${errors.username[0]}`);
+      }
+      // if (errors?.email) {
+      //   message.error(`Email: ${errors.email[0]}`);
+      // }
+      if (errors?.phone) {
+        message.error(`Телефон: ${errors.phone[0]}`);
+      }
+      if (errors?.password) {
+        message.error(`Пароль: ${errors.password[0]}`);
+      }
+      if (!errors || Object.keys(errors).length === 0) {
+        message.error("Щось пішло не так. Спробуйте ще раз.");
+      }
+    };
   };
 
   return (
