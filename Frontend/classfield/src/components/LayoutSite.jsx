@@ -5,6 +5,7 @@ import {
   UserAddOutlined,
   UserOutlined,
   HeartFilled,
+  TeamOutlined,
 } from "@ant-design/icons";
 import { useContext } from "react";
 import { UserContext } from "../contexts/user.context";
@@ -57,6 +58,11 @@ const LayoutSite = () => {
       key: "/favorites",
       label: <Link to="/favorites">Favorites</Link>,
       icon: <HeartFilled style={{ color: "#ff4d4f" }} />,
+    },
+    {
+      key: "/developers",
+      label: <Link to="/developers">Developers</Link>,
+      icon: <TeamOutlined />,
     },
   ];
 
