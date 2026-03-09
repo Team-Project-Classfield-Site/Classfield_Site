@@ -41,7 +41,6 @@ export const UserProvider = ({ children }) => {
       });
       return response.data;
     } catch (error) {
-      console.error("Error loading favorites:", error);
       return { results: [] };
     }
   };
@@ -57,7 +56,6 @@ export const UserProvider = ({ children }) => {
       });
       return response.data;
     } catch (error) {
-      console.error("Error loading single favorite:", error);
       return { results: [] };
     }
   };

@@ -22,7 +22,6 @@ class ClassfieldSerializer(serializers.ModelSerializer):
             'owner_avatar',
         ]
 
-        ]
         read_only_fields = ['owner', 'created_at']
 
     def validate_image(self, value):
@@ -41,3 +40,8 @@ class ClassfieldSerializer(serializers.ModelSerializer):
             if obj.owner and obj.owner.avatar:
                 return obj.owner.avatar.url
             return None
+    
+    def get_category_title(self, obj):
+            if obj.category:
+                return obj.category.title 
+            return "General"

@@ -10,7 +10,7 @@ const developers = [
     tasks: [
       "Розробка головної сторінки",
       "Компонент карток оголошень",
-      "z",
+      "Реалізував блокчейн функціонал",
     ],
     description:
       "Відповідав за розробку інтерфейсу головної сторінки, реалізацію карток оголошень.",
@@ -53,7 +53,7 @@ const developers = [
   },
 ];
 
-const DeveloperCard = ({ developers }) => (
+const DeveloperCard = ({ dev }) => (
   <div
     style={{
       width: "300px",
@@ -189,6 +189,7 @@ const DevelopersPage = () => {
           borderRadius: "20px",
           boxShadow: "0 -10px 20px rgba(0,0,0,0.05)",
           minHeight: "400px",
+          marginLeft: "65px",
         }}
       >
         <div
