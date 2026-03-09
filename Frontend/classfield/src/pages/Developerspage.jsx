@@ -20,9 +20,8 @@ const developers = [
     name: "uankee",
     role: "Backend Developer",
     color: "#006d75",
-    tasks: ["CRUD", "z", "z"],
-    description:
-      "CRUD...",
+    tasks: ["CRUD", "профіль користувача", "пошук по фільтрах"],
+    description: "CRUD...",
   },
   {
     id: 3,
@@ -38,7 +37,7 @@ const developers = [
     name: "Clyde",
     role: "moral support",
     color: "#874d00",
-    tasks: ["support", "mentor", ""],
+    tasks: ["Адвокат"],
     description:
       "Підтримував моральних дух команди і налаштовував на потужну працю.",
   },
@@ -48,8 +47,7 @@ const developers = [
     role: "Helper",
     color: "#820014",
     tasks: ["helped everyone at any time"],
-    description:
-      "Допомагав кожному в будь який час.",
+    description: "Допомагав кожному в будь який час.",
   },
 ];
 
