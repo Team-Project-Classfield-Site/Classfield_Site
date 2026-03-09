@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .serializers import RegisterSerializer, UserSerializer
+from .serializers import RegisterSerializer, UserClassfieldSerializer
 from .models import UserClassfield
 
 
@@ -101,7 +101,7 @@ class MeView(APIView):
     def get(self, request):
         try:
             profile = UserClassfield.objects.get(user=request.user)
-            serializer = UserSerializer(profile)
+            serializer = UserClassfieldSerializer(request.user)(profile)
             return Response(serializer.data)
         except UserClassfield.DoesNotExist:
             return Response({"error": "Профіль не знайдено."}, status=status.HTTP_404_NOT_FOUND)
@@ -109,7 +109,7 @@ class MeView(APIView):
     def patch(self, request):
         try:
             profile = UserClassfield.objects.get(user=request.user)
-            serializer = UserSerializer(profile, data=request.data, partial=True)
+            serializer = UserClassfieldSerializer(profile, data=request.data, partial=True)
             
             if serializer.is_valid():
                 serializer.save()

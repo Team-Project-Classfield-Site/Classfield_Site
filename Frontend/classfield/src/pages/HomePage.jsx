@@ -10,12 +10,19 @@ const HomePage = () => {
 
   const urlSearch = searchParams.get("search") || "";
   const urlPage = Number(searchParams.get("page")) || 1;
+  const urlCategory = searchParams.get("category") || "";
+  const urlOrdering = searchParams.get("ordering") || "";
 
   const [search, setSearch] = useState(urlSearch);
 
   useEffect(() => {
     setSearch(urlSearch);
   }, [urlSearch]);
+
+  const queryParams = {};
+  if (urlSearch) queryParams.search = urlSearch;
+  if (urlCategory) queryParams.category = urlCategory;
+  if (urlOrdering) queryParams.ordering = urlOrdering;
 
   const {
     data: classfields,
@@ -25,28 +32,40 @@ const HomePage = () => {
     setCurrentPage,
     loading,
     error,
-  } = usePagination(
-    "classfields/",
-    urlSearch ? { search: urlSearch } : {},
-    urlPage
-  );
+  } = usePagination("classfields/", queryParams, urlPage);
 
   const { data: categories } = usePagination("categories/");
   const { getUserFavorites, username } = useContext(UserContext);
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
-    const params = {};
-    if (urlSearch) params.search = urlSearch;
-    if (currentPage > 1) params.page = currentPage;
-    setSearchParams(params, { replace: true });
-  }, [currentPage]);
+    if (currentPage === urlPage) return;
 
-  const handleSearch = () => {
-    const params = {};
-    if (search) params.search = search;
+    const params = Object.fromEntries(searchParams.entries());
+    if (currentPage > 1) {
+      params.page = currentPage;
+    } else {
+      delete params.page; 
+    }
+    setSearchParams(params, { replace: true });
+  }, [currentPage, searchParams, setSearchParams, urlPage]);
+
+  const handleFilterChange = (key, value) => {
+    const params = Object.fromEntries(searchParams.entries());
+    
+    if (value) {
+      params[key] = value;
+    } else {
+      delete params[key];
+    }
+    
+    delete params.page;
     setSearchParams(params, { replace: true });
     setCurrentPage(1);
+  };
+
+  const handleSearch = () => {
+    handleFilterChange("search", search);
   };
 
   useEffect(() => {
@@ -62,10 +81,10 @@ const HomePage = () => {
     }
   }, [username, getUserFavorites]);
 
-  if (loading)
-    return <div style={{ textAlign: "center" }}>Завантаження...</div>;
+  if (loading && !classfields)
+    return <div style={{ textAlign: "center", padding: "50px" }}>Завантаження...</div>;
   if (error)
-    return <div style={{ color: "red", textAlign: "center" }}>{error}</div>;
+    return <div style={{ color: "red", textAlign: "center", padding: "50px" }}>{error}</div>;
 
   return (
     <div>
@@ -83,16 +102,18 @@ const HomePage = () => {
           Актуальні оголошення
         </h1>
         <p style={{ color: "#ffffff", paddingBottom: "50px" }}>
-          {urlSearch === ""
-            ? `Всього на сайті: ${totalCount} товарів`
-            : `За вашим запитом на сайті знайдено: ${totalCount} товарів`}
+          {urlSearch === "" && urlCategory === ""
+            ? `Всього на сайті: ${totalCount || 0} товарів`
+            : `За вашим запитом знайдено: ${totalCount || 0} товарів`}
         </p>
       </div>
 
+      {}
       <div
         style={{
           display: "flex",
           justifyContent: "center",
+          flexWrap: "wrap",
           marginBottom: "20px",
           gap: "10px",
         }}
@@ -111,6 +132,46 @@ const HomePage = () => {
             fontSize: "16px",
           }}
         />
+
+        {}
+        <select
+          value={urlCategory}
+          onChange={(e) => handleFilterChange("category", e.target.value)}
+          style={{
+            padding: "10px",
+            borderRadius: "10px",
+            border: "1px solid #ccc",
+            fontSize: "16px",
+            minWidth: "150px",
+          }}
+        >
+          <option value="">Всі категорії</option>
+          {categories?.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name || cat.title} 
+            </option>
+          ))}
+        </select>
+
+        {}
+<select
+  value={urlOrdering}
+  onChange={(e) => handleFilterChange("ordering", e.target.value)}
+  style={{
+    padding: "10px",
+    borderRadius: "10px",
+    border: "1px solid #ccc",
+    fontSize: "16px",
+    minWidth: "180px",
+  }}
+>
+  <option value="">Сортувати за...</option>
+  <option value="price">Спочатку дешевші</option>
+  <option value="-price">Спочатку дорожчі</option>
+  <option value="-date">Найновіші</option>  
+  <option value="date">Найстаріші</option>
+</select>
+
         <button
           onClick={handleSearch}
           style={{
@@ -165,12 +226,14 @@ const HomePage = () => {
           </div>
         )}
 
-        <div style={{ textAlign: "center", height: "0px" }}>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
+        <div style={{ textAlign: "center", marginTop: "auto", paddingBottom: "20px" }}>
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          )}
         </div>
       </div>
     </div>

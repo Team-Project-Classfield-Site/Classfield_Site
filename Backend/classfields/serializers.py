@@ -22,8 +22,8 @@ class ClassfieldSerializer(serializers.ModelSerializer):
             'owner_name',
             'owner_avatar',
         ]
-
-        read_only_fields = ['owner', 'created_at']
+        
+        read_only_fields = ['owner', 'date']
 
     def validate_image(self, value):
         if value:
@@ -33,16 +33,19 @@ class ClassfieldSerializer(serializers.ModelSerializer):
             if not value.name.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
                 raise serializers.ValidationError("Дозволені формати: JPG, JPEG, PNG, WEBP")
         return value
+
+
+    def get_category_title(self, obj):
+        if obj.category:
+
+            return getattr(obj.category, 'name', getattr(obj.category, 'title', str(obj.category)))
+        return None
+
     def get_owner_name(self, obj):
         """Return the owner's username."""
         return obj.owner.user.username if obj.owner else None
     
     def get_owner_avatar(self, obj):
-            if obj.owner and obj.owner.avatar:
-                return obj.owner.avatar.url
-            return None
-    
-    def get_category_title(self, obj):
-            if obj.category:
-                return obj.category.title 
-            return "General"
+        if obj.owner and hasattr(obj.owner, 'avatar') and obj.owner.avatar:
+            return obj.owner.avatar.url
+        return None

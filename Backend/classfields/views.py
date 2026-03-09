@@ -4,14 +4,13 @@ from .serializers import ClassfieldSerializer
 from .permissions import IsOwnerOrReadOnly
 from comments.models import Comment
 from comments.serializers import CommentSerializer
-from .pagination import ClassfieldPagination
-from rest_framework.exceptions import ValidationError
-from .permissions import IsOwnerOrReadOnly 
+from classfields.serializers import ClassfieldSerializer 
 from users.models import UserClassfield
-import django_filters
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
+import django_filters
 
 class ClassfieldFilter(django_filters.FilterSet):
     min_price = django_filters.NumberFilter(field_name="price", lookup_expr='gte')
@@ -36,7 +35,7 @@ class ClassfieldViewSet(viewsets.ModelViewSet):
     
     filterset_class = ClassfieldFilter
     
-    ordering_fields = ['price', 'created_at']
+    ordering_fields = ['price', 'date']
     
     search_fields = ['title', 'description']
 
@@ -44,7 +43,7 @@ class ClassfieldViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['get'], permission_classes=[AllowAny])
     def comments(self, request, pk=None):
         classfield = self.get_object()
-        comments = Comment.objects.filter(classfield=classfield).order_by('-created_at')
+        comments = Comment.objects.filter(classfield=classfield).order_by('-date')
         
         page = self.paginate_queryset(comments)
         if page is not None:
