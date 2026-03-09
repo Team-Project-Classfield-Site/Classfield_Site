@@ -53,7 +53,7 @@ const developers = [
   },
 ];
 
-const DeveloperCard = ({ dev }) => (
+const DeveloperCard = ({ developers }) => (
   <div
     style={{
       width: "300px",
