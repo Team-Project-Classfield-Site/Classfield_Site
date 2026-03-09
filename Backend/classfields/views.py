@@ -4,10 +4,14 @@ from .serializers import ClassfieldSerializer
 from .permissions import IsOwnerOrReadOnly
 from comments.models import Comment
 from comments.serializers import CommentSerializer
-from .pagination import ClassfieldPagination
-from rest_framework.exceptions import ValidationError
+from classfields.serializers import ClassfieldSerializer 
 from .permissions import IsOwnerOrReadOnly 
 from users.models import UserClassfield
+import django_filters
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.decorators import action 
+from rest_framework.permissions import AllowAny
 
 
 class ClassfieldFilter(django_filters.FilterSet):

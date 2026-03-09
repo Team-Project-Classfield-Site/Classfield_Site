@@ -6,6 +6,9 @@ import LogoutPage from "./pages/LogoutPage";
 import ClassfieldPage from "./pages/ClassfieldPage";
 import FavoritesPage from "./pages/Favoritespage";
 import LayoutSite from './components/LayoutSite';
+import MyAdsPage from "./pages/MyAdsPage";
+import AddAdPage from "./pages/AddAdPage";
+import EditAdPage from "./pages/EditAdPage";
 import './App.css';
 
 function App() {
@@ -20,6 +23,9 @@ function App() {
             <Route path="logout" element={<LogoutPage />} />
             <Route path="classfield_page/:id" element={<ClassfieldPage />} />
             <Route path="favorites" element={<FavoritesPage />} />
+            <Route path="my-ads" element={<MyAdsPage />} />
+            <Route path="add-ad" element={<AddAdPage />} /> 
+            <Route path="edit-ad/:id" element={<EditAdPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -5,6 +5,7 @@ import {
   UserAddOutlined,
   UserOutlined,
   HeartFilled,
+  AppstoreOutlined,
 } from "@ant-design/icons";
 import { useContext } from "react";
 import { UserContext } from "../contexts/user.context";
@@ -26,6 +27,11 @@ const itemsLR = [
 
 const itemsL = [
   {
+    key: "my-ads",
+    label: <Link to="/my-ads">Мої оголошення</Link>,
+    icon: <AppstoreOutlined />,
+  },
+  {
     key: "logout",
     label: <Link to="logout">Logout</Link>,
     icon: <UserAddOutlined />,
@@ -40,6 +46,7 @@ const LayoutSite = () => {
   const { username } = useContext(UserContext);
   const navigate = useNavigate();
 
+  // Основне меню зліва
   const items = [
     {
       key: "/",
@@ -96,6 +103,7 @@ const LayoutSite = () => {
           <Menu
             theme="dark"
             mode="horizontal"
+
             items={username != null ? itemsL : itemsLR}
             style={{
               flex: 1,
