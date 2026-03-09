@@ -35,7 +35,7 @@ class ClassfieldViewSet(viewsets.ModelViewSet):
     
     filterset_class = ClassfieldFilter
     
-    ordering_fields = ['price', 'created_at']
+    ordering_fields = ['price', 'date']
     
     search_fields = ['title', 'description']
 
@@ -43,7 +43,7 @@ class ClassfieldViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['get'], permission_classes=[AllowAny])
     def comments(self, request, pk=None):
         classfield = self.get_object()
-        comments = Comment.objects.filter(classfield=classfield).order_by('-created_at')
+        comments = Comment.objects.filter(classfield=classfield).order_by('-date')
         
         page = self.paginate_queryset(comments)
         if page is not None:

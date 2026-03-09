@@ -19,26 +19,28 @@ export default function ClassfieldCard({ classfield, categories }) {
 
   useEffect(() => {
     const checkStatus = async () => {
-      if (username) {
-        const data = await getUserFavorite(id);
-        if (data?.results?.length > 0) {
-          setFavorite(data.results[0]);
-        } else {
-          setFavorite(null);
+      if (username && id) {
+        try {
+          const data = await getUserFavorite(id);
+          setFavorite(data?.results?.[0] || null);
+        } catch (e) {
+          console.error(e);
         }
       }
 
-      try {
-        const blockchainStatus = await getIsPremiumStatus(Number(id));
-        if (blockchainStatus !== premiumtag) {
-          setIsPremium(blockchainStatus || premiumtag);
+      if (id) {
+        try {
+          const blockchainStatus = await getIsPremiumStatus(Number(id));
+          if (blockchainStatus !== isPremium) {
+            setIsPremium(blockchainStatus);
+          }
+        } catch (e) {
+          console.warn(e);
         }
-      } catch (e) {
-        console.error("Blockchain sync error for card:", id, e);
       }
     };
     checkStatus();
-  }, [id, username, getUserFavorite, premiumtag]);
+  }, [id, username]);
 
   const addToFavorite = async () => {
     if (!username) {
@@ -51,9 +53,7 @@ export default function ClassfieldCard({ classfield, categories }) {
       if (favorite) {
         await axios.delete(
           `http://127.0.0.1:8000/api/favorites/${favorite.id}/`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          },
+          { headers: { Authorization: `Bearer ${token}` } },
         );
         setFavorite(null);
         message.success("Removed from favorites");
@@ -114,7 +114,10 @@ export default function ClassfieldCard({ classfield, categories }) {
         </div>
       }
       actions={[
-        <div style={{ display: "flex", padding: "0 10px", gap: "10px" }}>
+        <div
+          style={{ display: "flex", padding: "0 10px", gap: "10px" }}
+          key="actions"
+        >
           <Button
             block
             loading={loading}

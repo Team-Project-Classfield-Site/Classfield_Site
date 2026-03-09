@@ -23,7 +23,7 @@ class ClassfieldSerializer(serializers.ModelSerializer):
             'owner_avatar',
         ]
         
-        read_only_fields = ['owner', 'created_at']
+        read_only_fields = ['owner', 'date']
 
     def validate_image(self, value):
         if value:

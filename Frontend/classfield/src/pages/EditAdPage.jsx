@@ -69,7 +69,7 @@ const EditAdPage = () => {
   }
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", padding: "40px 20px" }}>
+    <div style={{ display: "flex", justifyContent: "center", padding: "0px 20px" }}>
       <Card
         style={{
           width: "100%",
