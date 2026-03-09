@@ -8,7 +8,7 @@ class ClassfieldSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Classfield
-        ields = [
+        fields = [
             'id',
             'title',
             'description',
