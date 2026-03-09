@@ -1,21 +1,15 @@
 import { Breadcrumb, Layout, Menu, theme, ConfigProvider } from "antd";
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import {
   HomeFilled,
   UserAddOutlined,
   UserOutlined,
+  HeartFilled,
 } from "@ant-design/icons";
 import { useContext } from "react";
 import { UserContext } from "../contexts/user.context";
 
 const { Header, Content, Footer } = Layout;
-const items = [
-  {
-    key: "/",
-    label: <Link to="/">Home</Link>,
-    icon: <HomeFilled />,
-  },
-];
 
 const itemsLR = [
   {
@@ -39,11 +33,32 @@ const itemsL = [
 ];
 
 const LayoutSite = () => {
-    const {
+  const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
   const { username } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  const items = [
+    {
+      key: "/",
+      label: (
+        <Link
+          to="/"
+          onClick={(e) => { e.preventDefault(); navigate("/", { replace: true }); }}
+        >
+          Home
+        </Link>
+      ),
+      icon: <HomeFilled />,
+    },
+    {
+      key: "/favorites",
+      label: <Link to="/favorites">Favorites</Link>,
+      icon: <HeartFilled style={{ color: "#ff4d4f" }} />,
+    },
+  ];
 
   return (
     <Layout style={{ minHeight: "100vh", minWidth: "100vw" }}>

@@ -3,10 +3,19 @@ import { usePagination } from "../hooks/usePagination";
 import Pagination from "../components/Pagination";
 import { UserContext } from "../contexts/user.context";
 import { useState, useEffect, useContext } from "react";
+import { useSearchParams } from "react-router-dom";
 
 const HomePage = () => {
-  const [search, setSearch] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const urlSearch = searchParams.get("search") || "";
+  const urlPage = Number(searchParams.get("page")) || 1;
+
+  const [search, setSearch] = useState(urlSearch);
+
+  useEffect(() => {
+    setSearch(urlSearch);
+  }, [urlSearch]);
 
   const {
     data: classfields,
@@ -16,28 +25,42 @@ const HomePage = () => {
     setCurrentPage,
     loading,
     error,
-  } = usePagination("classfields/", searchQuery ? { search: searchQuery } : {});
+  } = usePagination(
+    "classfields/",
+    urlSearch ? { search: urlSearch } : {},
+    urlPage
+  );
+
   const { data: categories } = usePagination("categories/");
   const { getUserFavorites, username } = useContext(UserContext);
   const [favorites, setFavorites] = useState([]);
 
+  useEffect(() => {
+    const params = {};
+    if (urlSearch) params.search = urlSearch;
+    if (currentPage > 1) params.page = currentPage;
+    setSearchParams(params, { replace: true });
+  }, [currentPage]);
+
   const handleSearch = () => {
-    setSearchQuery(search);
+    const params = {};
+    if (search) params.search = search;
+    setSearchParams(params, { replace: true });
     setCurrentPage(1);
   };
 
-useEffect(() => {
-  const fetchItems = async () => {
-    const data = await getUserFavorites();
-    setFavorites(data.results || []);
-  };
+  useEffect(() => {
+    const fetchItems = async () => {
+      const data = await getUserFavorites();
+      setFavorites(data.results || []);
+    };
 
-  if (username) {
-    fetchItems();
-  } else {
-    setFavorites([]);
-  }
-}, [username, getUserFavorites]);
+    if (username) {
+      fetchItems();
+    } else {
+      setFavorites([]);
+    }
+  }, [username, getUserFavorites]);
 
   if (loading)
     return <div style={{ textAlign: "center" }}>Завантаження...</div>;
@@ -60,7 +83,7 @@ useEffect(() => {
           Актуальні оголошення
         </h1>
         <p style={{ color: "#ffffff", paddingBottom: "50px" }}>
-          {searchQuery == ""
+          {urlSearch === ""
             ? `Всього на сайті: ${totalCount} товарів`
             : `За вашим запитом на сайті знайдено: ${totalCount} товарів`}
         </p>
@@ -132,15 +155,13 @@ useEffect(() => {
               padding: "0 40px",
             }}
           >
-            {classfields?.map((item) => {
-              return (
-                <ClassfieldCard
-                  key={item.id}
-                  classfield={item}
-                  categories={categories}
-                />
-              );
-            })}
+            {classfields?.map((item) => (
+              <ClassfieldCard
+                key={item.id}
+                classfield={item}
+                categories={categories}
+              />
+            ))}
           </div>
         )}
 
