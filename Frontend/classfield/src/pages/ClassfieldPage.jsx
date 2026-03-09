@@ -23,7 +23,7 @@ import {
   HeartOutlined,
   MessageOutlined,
 } from "@ant-design/icons";
-
+import { buyPremiumTag, getIsPremiumStatus } from "../utilites/blockchainUtils";
 import { UserContext } from "../contexts/user.context";
 
 const { Title, Text, Paragraph } = Typography;
@@ -38,28 +38,34 @@ function ClassfieldPage() {
   const [loading, setLoading] = useState(true);
   const [favorite, setFavorite] = useState(null);
   const [btnLoading, setBtnLoading] = useState(false);
+  const [isPremium, setIsPremium] = useState(false);
+  const [premiumLoading, setPremiumLoading] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const [resContent, resComments] = await Promise.all([
-          axios.get(`http://127.0.0.1:8000/api/classfields/${id}/`),
-          axios.get(`http://127.0.0.1:8000/api/comments/?classfield=${id}`),
-        ]);
+const fetchData = async () => {
+  setLoading(true);
+  try {
+    const [resContent, resComments, blockchainStatus] = await Promise.all([
+      axios.get(`http://127.0.0.1:8000/api/classfields/${id}/`),
+      axios.get(`http://127.0.0.1:8000/api/comments/?classfield=${id}`),
+      getIsPremiumStatus(Number(id)),
+    ]);
 
-        setClassfield(resContent.data);
-        const commentsData =
-          resComments.data.results ||
-          (Array.isArray(resComments.data) ? resComments.data : []);
-        setComments(commentsData);
-      } catch (error) {
-        console.error("Fetch error:", error);
-        message.error("Failed to load data");
-      } finally {
-        setLoading(false);
-      }
-    };
+    const currentIsPremium = blockchainStatus || resContent.data.premiumtag;
+
+    setClassfield({
+      ...resContent.data,
+      premiumtag: currentIsPremium, 
+    });
+
+    setIsPremium(currentIsPremium);
+
+  } catch (error) {
+    console.error("Fetch error:", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
     fetchData();
   }, [id]);
@@ -82,20 +88,50 @@ function ClassfieldPage() {
     checkStatus();
   }, [id, username, getUserFavorite]);
 
+  const handleBuyPremium = async () => {
+    if (isPremium) {
+      message.info("Це оголошення вже має Premium статус");
+      return;
+    }
+
+    setPremiumLoading(true);
+    try {
+      const success = await buyPremiumTag(Number(id));
+
+      if (success) {
+        const token = localStorage.getItem("access_token");
+        await axios.patch(
+          `http://127.0.0.1:8000/api/classfields/${id}/`,
+          { premiumtag: true },
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+
+        setIsPremium(true);
+        setClassfield((prev) => ({ ...prev, premiumtag: true }));
+        message.success("Преміум успішно придбано!");
+      }
+    } catch (error) {
+      console.error("Помилка:", error);
+      message.error("Не вдалося завершити покупку");
+    } finally {
+      setPremiumLoading(false);
+    }
+  };
+
   const addToFavorite = async () => {
     if (!username) {
       message.warning("Please log in to add favorites");
       return;
     }
-
     setBtnLoading(true);
     const token = localStorage.getItem("access_token");
-
     try {
       if (favorite) {
         await axios.delete(
           `http://127.0.0.1:8000/api/favorites/${favorite.id}/`,
-          { headers: { Authorization: `Bearer ${token}` } },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
         );
         setFavorite(null);
         message.success("Removed from favorites");
@@ -109,7 +145,6 @@ function ClassfieldPage() {
         message.success("Added to favorites");
       }
     } catch (error) {
-      console.error(error.response?.data);
       message.error("Action failed");
     } finally {
       setBtnLoading(false);
@@ -124,7 +159,6 @@ function ClassfieldPage() {
         <Skeleton active />
       </div>
     );
-
   if (!classfield)
     return (
       <Empty description="Оголошення не знайдено" style={{ marginTop: 100 }} />
@@ -149,27 +183,45 @@ function ClassfieldPage() {
 
       <Row gutter={[24, 24]}>
         <Col xs={24} md={12}>
-          <Card
-            bodyStyle={{ padding: 0 }}
-            cover={
-              <img
-                alt={classfield.title}
-                src={
-                  classfield.photo ||
-                  "https://sesupport.edumall.jp/hc/article_attachments/900009570963/noImage.jpg"
-                }
+          <div style={{ position: "relative" }}>
+            {isPremium && (
+              <Tag
+                color="gold"
                 style={{
-                  borderRadius: "12px",
-                  height: "500px",
-                  objectFit: "cover",
+                  position: "absolute",
+                  top: 15,
+                  left: 15,
+                  zIndex: 2,
+                  fontSize: "14px",
+                  padding: "4px 12px",
+                  fontWeight: "bold",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
                 }}
-              />
-            }
-            style={{
-              borderRadius: "12px",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
-            }}
-          />
+              >
+                ★ PREMIUM
+              </Tag>
+            )}
+
+            <Card
+              styles={{ body: { padding: 0 } }}
+              cover={
+                <img
+                  alt={classfield.title}
+                  src={
+                    classfield.photo ||
+                    "https://sesupport.edumall.jp/hc/article_attachments/900009570963/noImage.jpg"
+                  }
+                  style={{
+                    borderRadius: "12px",
+                    height: "500px",
+                    objectFit: "cover",
+                    border: isPremium ? "4px solid #fadb14" : "none",
+                  }}
+                />
+              }
+              style={{ borderRadius: "12px" }}
+            />
+          </div>
         </Col>
 
         <Col xs={24} md={12}>
@@ -193,14 +245,14 @@ function ClassfieldPage() {
             <Title level={3} style={{ color: "#1890ff", marginTop: 0 }}>
               {classfield.price?.toLocaleString()} ₴
             </Title>
-
             <Divider />
+
             <Title level={4}>Description</Title>
             <Paragraph style={{ fontSize: "16px", color: "#595959" }}>
               {classfield.description}
             </Paragraph>
-
             <Divider />
+
             <div
               style={{
                 padding: "15px",
@@ -228,28 +280,52 @@ function ClassfieldPage() {
             </div>
 
             <Row gutter={16}>
-              <Col span={12}>
-                <Button size="large" block icon={<MessageOutlined />}>
-                  Write Message
-                </Button>
-              </Col>
-              <Col span={12}>
-                <Button
-                  size="large"
-                  block
-                  icon={<HeartOutlined />}
-                  loading={btnLoading}
-                  onClick={addToFavorite}
-                  style={{
-                    backgroundColor: isFavorite ? "#ff4d4f" : "#ffffff",
-                    color: isFavorite ? "#ffffff" : "#003a8c",
-                    borderColor: isFavorite ? "#ff4d4f" : "#91d5ff",
-                    fontWeight: "500",
-                  }}
-                >
-                  {isFavorite ? "In Favorites" : "Add to favorite"}
-                </Button>
-              </Col>
+              {username && classfield.owner_name === username ? (
+                <Col span={24}>
+                  <Button
+                    type="primary"
+                    size="large"
+                    block
+                    icon={<TagOutlined />}
+                    loading={premiumLoading}
+                    onClick={handleBuyPremium}
+                    disabled={isPremium}
+                    style={{
+                      backgroundColor: isPremium ? "#52c41a" : "#fadb14",
+                      borderColor: isPremium ? "#52c41a" : "#fadb14",
+                      color: "#000",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {isPremium ? "Premium Active" : "Buy Premium Tag (1 ETH)"}
+                  </Button>
+                </Col>
+              ) : (
+                <Col span={12}>
+                  <Button size="large" block icon={<MessageOutlined />}>
+                    Write Message
+                  </Button>
+                </Col>
+              )}
+
+              {username !== classfield.owner_name && (
+                <Col span={12}>
+                  <Button
+                    size="large"
+                    block
+                    icon={<HeartOutlined />}
+                    loading={btnLoading}
+                    onClick={addToFavorite}
+                    style={{
+                      backgroundColor: isFavorite ? "#ff4d4f" : "#ffffff",
+                      color: isFavorite ? "#ffffff" : "#003a8c",
+                      borderColor: isFavorite ? "#ff4d4f" : "#91d5ff",
+                    }}
+                  >
+                    {isFavorite ? "In Favorites" : "Add to favorite"}
+                  </Button>
+                </Col>
+              )}
             </Row>
           </Card>
         </Col>

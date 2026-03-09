@@ -16,6 +16,7 @@ class ClassfieldSerializer(serializers.ModelSerializer):
             'price',
             'date',
             'photo',
+            'premiumtag',
             'category',
             'category_title',
             'owner',
