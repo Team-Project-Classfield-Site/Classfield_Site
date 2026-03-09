@@ -1,20 +1,21 @@
 import { useState, useEffect, useContext } from "react";
-import { Card, Button, message } from "antd";
+import { Card, Button, message, Tag } from "antd";
 import { Link } from "react-router-dom";
+import { CrownFilled } from "@ant-design/icons";
 import axios from "axios";
 import { UserContext } from "../contexts/user.context";
+import { getIsPremiumStatus } from "../utilites/blockchainUtils";
 
 const { Meta } = Card;
 
-export default function ClassfieldCard({
-  classfield,
-  categories,
-}) {
-  const { id, photo, title, description, category, date } = classfield;
+export default function ClassfieldCard({ classfield, categories }) {
+  const { id, photo, title, description, category, date, premiumtag } =
+    classfield;
   const { getUserFavorite, username } = useContext(UserContext);
 
   const [favorite, setFavorite] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isPremium, setIsPremium] = useState(premiumtag);
 
   useEffect(() => {
     const checkStatus = async () => {
@@ -26,24 +27,33 @@ export default function ClassfieldCard({
           setFavorite(null);
         }
       }
+
+      try {
+        const blockchainStatus = await getIsPremiumStatus(Number(id));
+        if (blockchainStatus !== premiumtag) {
+          setIsPremium(blockchainStatus || premiumtag);
+        }
+      } catch (e) {
+        console.error("Blockchain sync error for card:", id, e);
+      }
     };
     checkStatus();
-  }, [id, username]);
+  }, [id, username, getUserFavorite, premiumtag]);
 
   const addToFavorite = async () => {
     if (!username) {
       message.warning("Please log in to add favorites");
       return;
     }
-
     setLoading(true);
     const token = localStorage.getItem("access_token");
-
     try {
       if (favorite) {
         await axios.delete(
           `http://127.0.0.1:8000/api/favorites/${favorite.id}/`,
-          { headers: { Authorization: `Bearer ${token}` } },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
         );
         setFavorite(null);
         message.success("Removed from favorites");
@@ -57,14 +67,11 @@ export default function ClassfieldCard({
         message.success("Added to favorites");
       }
     } catch (error) {
-      console.error(error.response?.data);
       message.error("Action failed");
     } finally {
       setLoading(false);
     }
   };
-
-  const isFavorite = favorite !== null;
 
   return (
     <Card
@@ -72,19 +79,39 @@ export default function ClassfieldCard({
       style={{
         width: "325px",
         borderRadius: "12px",
-        border: "1px solid #e0e0e0",
         overflow: "hidden",
+        border: isPremium ? "3px solid #fadb14" : "1px solid #e0e0e0",
+        boxShadow: isPremium ? "0 4px 15px rgba(250, 219, 20, 0.4)" : "none",
+        transition: "all 0.3s ease",
       }}
       cover={
-        <img
-          style={{ height: "300px", objectFit: "cover" }}
-          draggable={false}
-          alt={title}
-          src={
-            photo ||
-            "https://sesupport.edumall.jp/hc/article_attachments/900009570963/noImage.jpg"
-          }
-        />
+        <div style={{ position: "relative" }}>
+          {isPremium && (
+            <Tag
+              color="gold"
+              style={{
+                position: "absolute",
+                top: 10,
+                left: 10,
+                zIndex: 2,
+                fontWeight: "bold",
+                borderRadius: "4px",
+                boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
+              }}
+            >
+              <CrownFilled /> PREMIUM
+            </Tag>
+          )}
+          <img
+            style={{ height: "300px", objectFit: "cover", width: "100%" }}
+            draggable={false}
+            alt={title}
+            src={
+              photo ||
+              "https://sesupport.edumall.jp/hc/article_attachments/900009570963/noImage.jpg"
+            }
+          />
+        </div>
       }
       actions={[
         <div style={{ display: "flex", padding: "0 10px", gap: "10px" }}>
@@ -93,14 +120,14 @@ export default function ClassfieldCard({
             loading={loading}
             onClick={addToFavorite}
             style={{
-              backgroundColor: isFavorite ? "#ff4d4f" : "#ffffff",
-              color: isFavorite ? "#ffffff" : "#003a8c",
-              borderColor: isFavorite ? "#ff4d4f" : "#91d5ff",
+              backgroundColor: favorite ? "#ff4d4f" : "#ffffff",
+              color: favorite ? "#ffffff" : "#003a8c",
+              borderColor: favorite ? "#ff4d4f" : "#91d5ff",
               fontWeight: "500",
-              width: "150px",
+              width: "140px",
             }}
           >
-            {isFavorite ? "In Favorites" : "Add to favorite"}
+            {favorite ? "In Favorites" : "Favorite"}
           </Button>
 
           <Link to={`/classfield_page/${id}`} style={{ flex: 1 }}>
@@ -108,10 +135,11 @@ export default function ClassfieldCard({
               block
               type="primary"
               style={{
-                backgroundColor: "#0050b3",
-                borderColor: "#0050b3",
-                fontWeight: "500",
-                width: "150px",
+                backgroundColor: isPremium ? "#fadb14" : "#0050b3",
+                borderColor: isPremium ? "#fadb14" : "#0050b3",
+                color: isPremium ? "#000" : "#fff",
+                fontWeight: "600",
+                width: "140px",
               }}
             >
               Details
@@ -125,12 +153,16 @@ export default function ClassfieldCard({
           <div style={{ textAlign: "center", marginBottom: "4px" }}>
             <span
               style={{
-                color: "#000000",
+                color: isPremium ? "#d4b106" : "#000000",
                 fontSize: "20px",
                 fontWeight: "bold",
                 display: "block",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
               }}
             >
+              {isPremium && <CrownFilled style={{ marginRight: 5 }} />}
               {title}
             </span>
           </div>
@@ -171,6 +203,7 @@ export default function ClassfieldCard({
                 paddingTop: "8px",
                 fontSize: "12px",
                 fontStyle: "italic",
+                color: isPremium ? "#8c8c8c" : "#bfbfbf",
               }}
             >
               Posted: {date?.slice(0, 10)}

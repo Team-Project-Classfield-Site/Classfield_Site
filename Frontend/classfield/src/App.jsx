@@ -5,6 +5,7 @@ import LoginPage from "./pages/LoginPage";
 import LogoutPage from "./pages/LogoutPage";
 import ClassfieldPage from "./pages/ClassfieldPage";
 import FavoritesPage from "./pages/Favoritespage";
+import DevelopersPage from "./pages/Developerspage";
 import LayoutSite from './components/LayoutSite';
 import MyAdsPage from "./pages/MyAdsPage";
 import AddAdPage from "./pages/AddAdPage";
@@ -26,6 +27,7 @@ function App() {
             <Route path="my-ads" element={<MyAdsPage />} />
             <Route path="add-ad" element={<AddAdPage />} /> 
             <Route path="edit-ad/:id" element={<EditAdPage />} />
+            <Route path="developers" element={<DevelopersPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

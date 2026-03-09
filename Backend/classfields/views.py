@@ -5,14 +5,12 @@ from .permissions import IsOwnerOrReadOnly
 from comments.models import Comment
 from comments.serializers import CommentSerializer
 from classfields.serializers import ClassfieldSerializer 
-from .permissions import IsOwnerOrReadOnly 
 from users.models import UserClassfield
-import django_filters
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.decorators import action 
-from rest_framework.permissions import AllowAny
-
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.decorators import action
+import django_filters
 
 class ClassfieldFilter(django_filters.FilterSet):
     min_price = django_filters.NumberFilter(field_name="price", lookup_expr='gte')

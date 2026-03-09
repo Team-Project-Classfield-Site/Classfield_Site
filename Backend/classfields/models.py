@@ -16,6 +16,7 @@ class Classfield(models.Model):
     )
     date = models.DateTimeField(auto_now_add=True)
     photo = models.ImageField(upload_to='classfields/', null=True, blank=True)
+    premiumtag = models.BooleanField(null=True, blank=True)
 
     category = models.ForeignKey(
         Category,
