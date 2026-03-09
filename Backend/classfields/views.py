@@ -8,7 +8,10 @@ from .pagination import ClassfieldPagination
 from rest_framework.exceptions import ValidationError
 from .permissions import IsOwnerOrReadOnly 
 from users.models import UserClassfield
-
+import django_filters
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.decorators import action
 
 class ClassfieldFilter(django_filters.FilterSet):
     min_price = django_filters.NumberFilter(field_name="price", lookup_expr='gte')
