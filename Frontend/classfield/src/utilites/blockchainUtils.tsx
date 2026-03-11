@@ -1,6 +1,6 @@
 import { BrowserProvider, Contract, ethers, Signer } from "ethers";
 
-const contractAddress = "0x077E4D73012F87A117F3466BA6818a43C651F042";
+const contractAddress = "0x897d984387E82028802B313D7c7A2751D07a7177";
 const abi = [
   { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
   { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "int256", "name": "id", "type": "int256" }, { "indexed": false, "internalType": "address", "name": "buyer", "type": "address" }], "name": "PremiumBought", "type": "event" },
